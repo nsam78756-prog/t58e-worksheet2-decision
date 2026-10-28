@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>T58E · Worksheet 2 Decision Sheet</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#14181f; --muted:#66707f;
+    --line:#e3e7ee; --yes:#0f7b4f; --yesbg:#e6f4ec; --no:#b4232c; --nobg:#fbe9ea;
+    --cmt:#8a5a00; --cmtbg:#fdf3e0; --brand:#1f4bd8; --brandbg:#eef2ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 14px 64px}
+  header{padding:6px 0 14px}
+  .kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:22px;margin:6px 0 4px;letter-spacing:-.01em}
+  h1 small{font-size:13px;font-weight:400;color:var(--muted);display:block;margin-top:4px;letter-spacing:0}
+  .due{display:inline-block;margin-top:10px;padding:5px 10px;border-radius:999px;background:var(--brandbg);color:var(--brand);font-size:12.5px;font-weight:600}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+  .card h2{font-size:15px;margin:0 0 4px}
+  .card .hint{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .names{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+  .name{border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 10px;text-align:left;
+    font-size:13.5px;cursor:pointer;transition:.12s;color:var(--ink)}
+  .name:active{transform:scale(.99)}
+  .name.on{border-color:var(--brand);background:var(--brandbg);box-shadow:inset 0 0 0 1px var(--brand);font-weight:600;color:var(--brand)}
+  .name .sub{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:2px}
+  .name.on .sub{color:var(--brand)}
+  .q{border-top:1px solid var(--line);padding:14px 0 4px}
+  .q:first-of-type{border-top:0}
+  .q .en{font-size:14px;font-weight:600;margin:0 0 3px}
+  .q .cn{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+  .opts{display:flex;gap:8px;flex-wrap:wrap}
+  .opt{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer;color:var(--ink)}
+  .opt.on[data-v="yes"]{border-color:var(--yes);background:var(--yesbg);color:var(--yes);font-weight:600}
+  .opt.on[data-v="no"]{border-color:var(--no);background:var(--nobg);color:var(--no);font-weight:600}
+  .opt.on[data-v="cmt"]{border-color:var(--cmt);background:var(--cmtbg);color:var(--cmt);font-weight:600}
+  textarea{width:100%;margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:13.5px;resize:vertical;min-height:58px;display:none}
+  textarea.show{display:block}
+  .items{display:grid;gap:7px;margin-top:4px}
+  .item{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;font-size:13.5px}
+  .item.on{border-color:var(--brand);background:var(--brandbg)}
+  .item input{margin:2px 0 0;accent-color:var(--brand)}
+  .item b{font-weight:600}
+  .item span{color:var(--muted);font-size:12px;display:block;margin-top:1px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  button.primary{flex:1;min-width:180px;background:var(--brand);color:#fff;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer}
+  button.primary:disabled{opacity:.5}
+  button.ghost{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 16px;font-size:14px;cursor:pointer;color:var(--ink)}
+  .err{background:var(--nobg);color:var(--no);border-radius:10px;padding:10px 12px;font-size:13px;margin-top:12px;display:none}
+  .err.show{display:block}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#14181f;color:#fff;
+    padding:11px 18px;border-radius:999px;font-size:13.5px;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+  .toast.show{opacity:1;bottom:30px}
+  /* summary */
+  .bar{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .bar .n{font-size:26px;font-weight:700;line-height:1}
+  .bar .t{font-size:13px;color:var(--muted)}
+  .grid{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  .grid th,.grid td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  .grid th{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .grid td.c{text-align:center;width:52px;font-size:15px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+  .pill.y{background:var(--yesbg);color:var(--yes)}
+  .pill.n{background:var(--nobg);color:var(--no)}
+  .pill.c{background:var(--cmtbg);color:var(--cmt)}
+  .pill.x{background:#eef0f4;color:var(--muted)}
+  .notes{margin:12px 0 0;padding:0;list-style:none}
+  .notes li{border-left:3px solid var(--cmt);background:var(--cmtbg);border-radius:0 8px 8px 0;padding:9px 12px;margin-bottom:8px;font-size:13.5px}
+  .notes li b{display:block;font-size:12px;color:var(--cmt);margin-bottom:2px;letter-spacing:.02em}
+  .claim{display:grid;gap:6px;margin-top:8px;font-size:13.5px}
+  .claim .row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:7px 0}
+  .claim .who{font-weight:600}
+  .claim .none{color:var(--no);font-weight:600}
+  .hide{display:none !important}
+  .who-list{font-size:12.5px;color:var(--muted);margin-top:8px}
+  footer{margin-top:28px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+  @media(min-width:640px){ .names{grid-template-columns:repeat(3,1fr)} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">UNI 2002BEW · T58E · Group Assignment</div>
+    <h1>Worksheet 2 — Decision Sheet
+      <small>小组作业 Task C + Task D：每人点一下「同意 / 不同意 / 我有话说」，提交后这里会出现全组的汇总</small>
+    </h1>
+    <div class="due">Deadline: 16 Nov 2026 (Mon) 17:00 · 内部截止 12:00 上传</div>
+  </header>
+
+  <!-- ============ 填写区 ============ -->
+  <div id="formView">
+    <div class="card">
+      <h2>1 · 你是谁？ <span style="font-weight:400;color:var(--muted);font-size:12.5px">Who are you?</span></h2>
+      <p class="hint">点自己的名字，然后再填下面五个问题。填错了可以随时重填，会覆盖你上一次的答案。</p>
+      <div class="names" id="names"></div>
+    </div>
+
+    <div class="card">
+      <h2>2 · 五个待定的事 <span style="font-weight:400;color:var(--muted);font-size:12.5px">Five decisions</span></h2>
+      <p class="hint">每一题：<b>✅ 同意</b> / <b>❌ 不同意</b> / <b>💬 我有话说</b>（写了意见就算有话说）。</p>
+      <div id="questions"></div>
+    </div>
+
+    <div class="card">
+      <h2>3 · Task C 九项，你认领哪几项？ <span style="font-weight:400;color:var(--muted);font-size:12.5px">Claim 1–2 items</span></h2>
+      <p class="hint">每人最多选 2 项。选完提交后，汇总页面会显示每一项谁在做、哪几项还没人认领。</p>
+      <div class="items" id="items"></div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="submitBtn">提交，看全组汇总 →</button>
+      <button class="ghost" id="seeAllBtn">只看汇总</button>
+    </div>
+    <div class="err" id="err"></div>
+  </div>
+
+  <!-- ============ 汇总区 ============ -->
+  <div id="summaryView" class="hide">
+    <div class="card">
+      <div class="bar">
+        <div class="n" id="doneCount">0</div>
+        <div class="t">/ 6 人已填 · 刷新看最新<br><span id="lastSync" style="font-size:11.5px"></span></div>
+        <div style="margin-left:auto">
+          <button class="ghost" id="refreshBtn" style="padding:9px 13px;font-size:13px">刷新</button>
+        </div>
+      </div>
+      <div class="who-list" id="whoList"></div>
+    </div>
+
+    <div class="card">
+      <h2>五个决定的汇总</h2>
+      <div style="overflow-x:auto"><table class="grid" id="decisionTable"></table></div>
+    </div>
+
+    <div class="card" id="notesCard">
+      <h2>大家的意见和异议</h2>
+      <ul class="notes" id="notesList"></ul>
+    </div>
+
+    <div class="card">
+      <h2>九项认领情况</h2>
+      <div class="claim" id="claimList"></div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="copyBtn">复制汇总文字（发群里）</button>
+      <button class="ghost" id="editBtn">改我自己的答案</button>
+    </div>
+  </div>
+
+  <footer>
+    数据只用于本次小组作业的组内沟通 · 不收集学号 · 中转服务约 12 小时后自动清除旧记录，我在后台每天备份一份<br>
+    <span id="pingNote">若刷新不出数据，说明网络挡了 ntfy.sh —— 直接把意见发群里，我手动补进汇总</span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const TOPIC = "t58e_u2002_ws2_k7m3x9";
+const MEMBERS = ["SINHA Krish","TAN Zhifeng","WEI Hongyu","WON King Wing","WU Zibo","YAO Junyi"];
+const SHORT = {"SINHA Krish":"KS","TAN Zhifeng":"TZ","WEI Hongyu":"WH","WON King Wing":"KW","WU Zibo":"WZ","YAO Junyi":"YJ"};
+
+const QUESTIONS = [
+  {id:"q1", en:"Topic locked: AI tool misuse leading to plagiarism & ethical breaches",
+        cn:"题目锁定「AI 工具滥用导致抄袭和学术不端」这一项（5 选 1 里挑的）"},
+  {id:"q2", en:"Video format: record → upload to YouTube (unlisted) → paste the URL",
+        cn:"视频走录播：录好传 YouTube（不公开列出），把链接填进 Worksheet 2（不走 Zoom 会议）"},
+  {id:"q3", en:"Campaign dates in the plan: 23–27 Nov 2026 (Mon–Fri), 11:00–15:00 daily",
+        cn:"策划书里写的活动日期：11/23–27 周一至五，每天 11:00–15:00（只是纸上计划，不用真办）"},
+  {id:"q4", en:"Filming window: 7–9 Nov, everyone records in one session if possible",
+        cn:"拍摄窗口：11/7–9 集中录（实在凑不齐就各自录自己那段）"},
+  {id:"q5", en:"Internal deadline: Worksheet 2 uploaded by 16 Nov 12:00, peer evaluation by 17:00",
+        cn:"内部截止：11/16 中午 12:00 上传 Worksheet 2，17:00 前每人交互评表"}
+];
+
+const ITEMS = [
+  ["1","Problem Statement","问题陈述"],
+  ["2","Campaign Name","活动名字"],
+  ["3","Target Audience","目标受众 + 预计触达人数"],
+  ["4","Aims, Objectives & Justifications","目标 + 理由"],
+  ["5","Theme","主题口号"],
+  ["6","Date, Time, Duration","日期时间时长"],
+  ["7","Venue(s)","场地"],
+  ["8","Programmes / Rundown","活动流程（最花心思的一栏）"],
+  ["9","Marketing & Communication","宣传推广"]
+];
+
+let state = {who:null, ans:{}, items:[], note:""};
+let remote = [];   // all submissions
+
+/* ---------- storage (ntfy.sh) ---------- */
+async function pull(tries){
+  tries = tries || 4;
+  let lastErr;
+  for(let i=0;i<tries;i++){
+    try{
+      const r = await fetch(`https://ntfy.sh/${TOPIC}/json?poll=1&since=all&c=${Date.now()}`, {cache:"no-store"});
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      const txt = await r.text();
+      const out = [];
+      txt.split("\n").forEach(line=>{
+        line = line.trim(); if(!line) return;
+        try{
+          const o = JSON.parse(line);
+          if(o.event !== "message" || !o.message) return;
+          const d = JSON.parse(o.message);
+          if(d && d.m && d.ans) out.push(d);
+        }catch(e){}
+      });
+      // newest wins per member
+      const best = {};
+      out.forEach(d=>{ if(!best[d.m] || (d.ts||0) > (best[d.m].ts||0)) best[d.m] = d; });
+      remote = Object.values(best).sort((a,b)=>MEMBERS.indexOf(a.m)-MEMBERS.indexOf(b.m));
+      return remote;
+    }catch(e){ lastErr = e; }
+    await new Promise(r=>setTimeout(r, 700));
+  }
+  if(lastErr && !remote.length) throw lastErr;
+  return remote;
+}
+
+async function push(rec){
+  const r = await fetch(`https://ntfy.sh/${TOPIC}`, {
+    method:"POST", body: JSON.stringify(rec),
+    headers:{"Content-Type":"text/plain"}
+  });
+  if(!r.ok) throw new Error("HTTP "+r.status);
+}
+
+/* ---------- render form ---------- */
+const namesEl = document.getElementById("names");
+MEMBERS.forEach(m=>{
+  const b = document.createElement("button");
+  b.className = "name"; b.dataset.m = m;
+  b.innerHTML = `${m}<span class="sub">${SHORT[m]}</span>`;
+  b.onclick = ()=>{
+    state.who = m;
+    [...namesEl.children].forEach(c=>c.classList.toggle("on", c.dataset.m===m));
+    saveLocal();
+  };
+  namesEl.appendChild(b);
+});
+
+const qEl = document.getElementById("questions");
+QUESTIONS.forEach(q=>{
+  const d = document.createElement("div");
+  d.className = "q"; d.dataset.q = q.id;
+  d.innerHTML = `
+    <p class="en">${q.en}</p>
+    <p class="cn">${q.cn}</p>
+    <div class="opts">
+      <button class="opt" data-v="yes">✅ 同意</button>
+      <button class="opt" data-v="no">❌ 不同意</button>
+      <button class="opt" data-v="cmt">💬 我有话说</button>
+    </div>
+    <textarea placeholder="写下你的意见 / 你想改成什么…"></textarea>`;
+  const ta = d.querySelector("textarea");
+  d.querySelectorAll(".opt").forEach(btn=>{
+    btn.onclick = ()=>{
+      const v = btn.dataset.v;
+      state.ans[q.id] = (state.ans[q.id] === v) ? null : v;
+      d.querySelectorAll(".opt").forEach(o=>o.classList.toggle("on", o.dataset.v===state.ans[q.id]));
+      ta.classList.toggle("show", state.ans[q.id]==="cmt");
+      if(state.ans[q.id]==="cmt") ta.focus();
+      saveLocal();
+    };
+  });
+  ta.oninput = ()=>{ state.note = ta.value; saveLocal(); };
+  qEl.appendChild(d);
+});
+
+const itemsEl = document.getElementById("items");
+ITEMS.forEach(([n,en,cn])=>{
+  const l = document.createElement("label");
+  l.className = "item"; l.dataset.n = n;
+  l.innerHTML = `<input type="checkbox" value="${n}"><div><b>${n}. ${en}</b><span>${cn}</span></div>`;
+  const cb = l.querySelector("input");
+  cb.onchange = ()=>{
+    if(cb.checked && state.items.length >= 2){ cb.checked = false; toast("最多选 2 项，不然活都堆你身上了"); return; }
+    state.items = [...itemsEl.querySelectorAll("input:checked")].map(i=>i.value);
+    l.classList.toggle("on", cb.checked);
+    saveLocal();
+  };
+  itemsEl.appendChild(l);
+});
+
+/* ---------- local cache ---------- */
+function saveLocal(){
+  try{ localStorage.setItem("t58e_ws2", JSON.stringify(state)); }catch(e){}
+}
+function loadLocal(){
+  try{
+    const s = JSON.parse(localStorage.getItem("t58e_ws2")||"null");
+    if(!s) return;
+    state = Object.assign(state, s);
+    if(state.who){
+      const nb = [...namesEl.children].find(c=>c.dataset.m===state.who);
+      if(nb) nb.classList.add("on");
+    }
+    Object.entries(state.ans||{}).forEach(([qid,v])=>{
+      if(!v) return;
+      const qd = qEl.querySelector(`[data-q="${qid}"]`); if(!qd) return;
+      qd.querySelector(`.opt[data-v="${v}"]`).classList.add("on");
+      if(v==="cmt") qd.querySelector("textarea").classList.add("show");
+    });
+    (state.items||[]).forEach(n=>{
+      const l = itemsEl.querySelector(`[data-n="${n}"]`);
+      if(l){ l.querySelector("input").checked = true; l.classList.add("on"); }
+    });
+    // restore note into the textarea of the commented question
+    const cmtQ = Object.entries(state.ans||{}).find(([k,v])=>v==="cmt");
+    if(cmtQ && state.note){ const t = qEl.querySelector(`[data-q="${cmtQ[0]}"] textarea`); if(t) t.value = state.note; }
+  }catch(e){}
+}
+
+/* ---------- submit ---------- */
+const errEl = document.getElementById("err");
+function showErr(msg){ errEl.textContent = msg; errEl.classList.add("show"); }
+
+document.getElementById("submitBtn").onclick = async ()=>{
+  errEl.classList.remove("show");
+  if(!state.who) return showErr("先点你自己的名字。");
+  const missing = QUESTIONS.filter(q=>!state.ans[q.id]).map(q=>q.id.toUpperCase());
+  if(missing.length) return showErr("还没答：" + missing.join("、"));
+
+  const rec = {m: state.who, ans: state.ans, items: state.items, note: state.note||"", ts: Date.now()};
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true; btn.textContent = "提交中…";
+  try{
+    await push(rec);
+    saveLocal();
+    await new Promise(r=>setTimeout(r, 1400));
+    await showSummary();
+    toast("已提交 ✅");
+  }catch(e){
+    showErr("提交失败（" + e.message + "）。可能是网络挡了 ntfy.sh —— 把你的答案直接发群里也行。");
+  }finally{
+    btn.disabled = false; btn.textContent = "提交，看全组汇总 →";
+  }
+};
+document.getElementById("seeAllBtn").onclick = ()=>showSummary();
+
+/* ---------- summary ---------- */
+async function showSummary(){
+  document.getElementById("formView").classList.add("hide");
+  document.getElementById("summaryView").classList.remove("hide");
+  window.scrollTo({top:0,behavior:"smooth"});
+  await refresh();
+}
+
+async function refresh(){
+  const t = document.getElementById("lastSync");
+  t.textContent = "同步中…";
+  try{
+    await pull();
+    t.textContent = "最后更新 " + new Date().toLocaleTimeString("zh-CN",{hour12:false});
+  }catch(e){
+    t.textContent = "拉取失败：" + e.message + "（本地已有 " + remote.length + " 条）";
+  }
+  renderSummary();
+}
+
+function renderSummary(){
+  const done = remote.length;
+  document.getElementById("doneCount").textContent = done;
+
+  const missing = MEMBERS.filter(m=>!remote.find(r=>r.m===m));
+  document.getElementById("whoList").innerHTML = missing.length
+    ? "还没填：<b style='color:#b4232c'>" + missing.map(m=>m+" ("+SHORT[m]+")").join("、") + "</b>"
+    : "六个人都填完了 ✅";
+
+  // decision table
+  const rows = [];
+  rows.push("<tr><th>待定事项</th>" + MEMBERS.map(m=>`<th style="text-align:center">${SHORT[m]}</th>`).join("") + "<th style='text-align:center'>结果</th></tr>");
+  const sym = {yes:"✅", no:"❌", cmt:"💬"};
+  QUESTIONS.forEach(q=>{
+    let y=0,n=0,c=0;
+    const cells = MEMBERS.map(m=>{
+      const r = remote.find(x=>x.m===m);
+      const v = r && r.ans ? r.ans[q.id] : null;
+      if(v==="yes") y++; else if(v==="no") n++; else if(v==="cmt") c++;
+      return `<td class="c">${v?sym[v]:"·"}</td>`;
+    }).join("");
+    let verdict;
+    const filled = y+n+c;
+    if(n>0) verdict = `<span class="pill n">${n} 人反对</span>`;
+    else if(filled<6) verdict = `<span class="pill x">${y} 同意${c?" · "+c+" 有意见":""} · 还差 ${6-filled} 人</span>`;
+    else if(c>0) verdict = `<span class="pill c">${y} 同意 / ${c} 有意见</span>`;
+    else verdict = '<span class="pill y">6/6 全票通过</span>';
+    rows.push(`<tr><td><b>${q.id.toUpperCase()}</b> ${q.en}</td>${cells}<td style="text-align:center">${verdict}</td></tr>`);
+  });
+  document.getElementById("decisionTable").innerHTML = rows.join("");
+
+  // notes
+  const nl = document.getElementById("notesList");
+  const notes = [];
+  remote.forEach(r=>{
+    if(r.note && r.note.trim()){
+      const which = Object.entries(r.ans||{}).filter(([k,v])=>v==="cmt").map(([k])=>k.toUpperCase()).join(",");
+      notes.push(`<li><b>${r.m}${which?" · "+which:""}</b>${escapeHtml(r.note.trim())}</li>`);
+    }
+    QUESTIONS.forEach(q=>{
+      if(r.ans && r.ans[q.id]==="no") notes.push(`<li><b>${r.m} · ${q.id.toUpperCase()} 反对</b>${escapeHtml(q.en)}</li>`);
+    });
+  });
+  nl.innerHTML = notes.length ? notes.join("") : "<li style='background:#eef0f4;border-color:#c6ccd6;color:#66707f'>暂时还没有人提意见或反对。</li>";
+
+  // claims
+  const cl = document.getElementById("claimList");
+  cl.innerHTML = ITEMS.map(([n,en,cn])=>{
+    const who = remote.filter(r=>(r.items||[]).includes(n)).map(r=>r.m);
+    return `<div class="row"><div>${n}. ${en}<span style="color:#66707f;font-size:12px"> ${cn}</span></div>
+      <div class="who ${who.length?'':'none'}">${who.length? who.map(w=>w.split(' ')[0]).join('、') : '没人认领'}</div></div>`;
+  }).join("");
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ---------- copy summary ---------- */
+document.getElementById("copyBtn").onclick = ()=>{
+  const sym = {yes:"YES", no:"NO", cmt:"COMMENT"};
+  const lines = [];
+  lines.push("T58E · Worksheet 2 decisions (" + new Date().toLocaleDateString("en-GB") + ")");
+  lines.push("Filled: " + remote.map(r=>r.m).join(", "));
+  const missing = MEMBERS.filter(m=>!remote.find(r=>r.m===m));
+  if(missing.length) lines.push("Missing: " + missing.join(", "));
+  lines.push("");
+  QUESTIONS.forEach(q=>{
+    const ys = remote.filter(r=>r.ans[q.id]==="yes").map(r=>SHORT[r.m]);
+    const ns = remote.filter(r=>r.ans[q.id]==="no").map(r=>SHORT[r.m]);
+    const cs = remote.filter(r=>r.ans[q.id]==="cmt").map(r=>SHORT[r.m]);
+    lines.push(q.id.toUpperCase() + " " + q.en);
+    lines.push("  agree: " + (ys.join(",")||"-") + " | disagree: " + (ns.join(",")||"-") + " | comment: " + (cs.join(",")||"-"));
+  });
+  lines.push("");
+  lines.push("Item claims:");
+  ITEMS.forEach(([n,en])=>{
+    const who = remote.filter(r=>(r.items||[]).includes(n)).map(r=>r.m);
+    lines.push("  " + n + ". " + en + " -> " + (who.join(", ")||"UNCLAIMED"));
+  });
+  const notes = remote.filter(r=>r.note && r.note.trim());
+  if(notes.length){ lines.push(""); lines.push("Comments:"); notes.forEach(r=>lines.push("  " + r.m + ": " + r.note.trim())); }
+
+  const txt = lines.join("\n");
+  navigator.clipboard.writeText(txt).then(()=>toast("已复制，粘到群里就行"))
+    .catch(()=>{ window.prompt("复制这段：", txt); });
+};
+
+document.getElementById("refreshBtn").onclick = refresh;
+document.getElementById("editBtn").onclick = ()=>{
+  document.getElementById("summaryView").classList.add("hide");
+  document.getElementById("formView").classList.remove("hide");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+loadLocal();
+// demo: anyone can peek at the summary without answering
+if(location.hash === "#all") showSummary();
+</script>
+</body>
+</html>
